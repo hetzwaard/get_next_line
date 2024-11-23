@@ -11,91 +11,80 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
-static char	*set_line(char *line_buffer)
+static char	*clean_storage(char *storage)
 {
-	char	*left_c;
-	ssize_t	i;
+	char	*new_storage;
+	char	*ptr;
+	int		len;
 
-	if (!line_buffer)
+	ptr = ft_strchr(storage, '\n');
+	if (!ptr)
+		return (free(storage), storage = NULL, new_storage = NULL);
+	else
+		len = (ptr - storage) + 1;
+	if (!storage[len])
+		return (free(storage), storage = NULL);
+	new_storage = ft_substr(storage, len, ft_strlen(storage) - len);
+	(free(storage), storage = NULL);
+	if (!new_storage)
 		return (NULL);
-	i = 0;
-	while (line_buffer[i] != '\n' && line_buffer[i] != '\0')
-		i++;
-	if (line_buffer[i] == '\0' || line_buffer[i + 1] == '\0')
-	{
-		printf("baska bir sey yok\n");
-		return (NULL);
-	}
-	left_c = ft_substr(line_buffer, i + 1, ft_strlen(line_buffer) - i);
-	if (!left_c)
-	{
-		printf("8hatayi burada aldi\n");
-		return (free(line_buffer), line_buffer = NULL, NULL);
-	}
-	line_buffer[i + 1] = 0;
-	return (left_c);
+	return (new_storage);
 }
 
-static char	*fill_line(int fd, char *left_c, char *buffer)
+static char	*new_line(char *storage)
 {
-	char	*tmp;
-	ssize_t	b_read;
+	char	*line;
+	char	*ptr;
+	int		len;
 
-	b_read = 1;
-	while (b_read > 0)
+	ptr = ft_strchr(storage, '\n');
+	len = (ptr - storage) + 1;
+	line = ft_substr(storage, 0, len);
+	if (!line)
+		return (NULL);
+	return (line);
+}
+
+static char	*read_buffer(int fd, char *storage)
+{
+	int		rid;
+	char	*buffer;
+
+	rid = 1;
+	buffer = malloc((BUFFER_SIZE + 1) * 1);
+	if (!buffer)
+		return (free(storage), storage = NULL, NULL);
+	buffer[0] = '\0';
+	while (rid > 0 && !ft_strchr(buffer, '\n'))
 	{
-		b_read = read(fd, buffer, BUFFER_SIZE);
-		if (b_read == -1)
+		rid = read (fd, buffer, BUFFER_SIZE);
+		if (rid > 0)
 		{
-			printf("7hatayi burada aldi\n");
-			return (free(left_c), left_c = NULL, NULL);
+			buffer[rid] = '\0';
+			storage = ft_strjoin(storage, buffer);
 		}
-		else if (!b_read)
-			break ;
-		buffer[b_read] = '\0';
-		if (!left_c)
-			left_c = ft_strdup("");
-		if (!left_c)
-			printf("6dup\n");
-		tmp = ft_strjoin(left_c, buffer);
-		if (!tmp)
-			printf("5hatayi burada aldi\n");
-		free(left_c);
-		left_c = tmp;
-		if (ft_strchr(buffer, '\n'))
-			break ;
 	}
-	return (left_c);
+	free(buffer);
+	if (rid == -1)
+		return (free(storage), storage = NULL, NULL);
+	return (storage);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*left_c;
+	static char	*storage = {0};
 	char		*line;
-	char		*buffer;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || fd > 1024)
-		return (free(left_c), left_c = NULL, NULL);
-	buffer = (char *)malloc((BUFFER_SIZE + 1) * 1);
-	if (!buffer)
-	{
-		printf("1hatayi burada aldi\n");
-		return (free(left_c), left_c = NULL, NULL);
-	}
-	line = fill_line(fd, left_c, buffer);
+	if (fd < 0)
+		return (NULL);
+	if ((storage && !ft_strchr(storage, '\n')) || !storage)
+		storage = read_buffer (fd, storage);
+	if (!storage)
+		return (NULL);
+	line = new_line(storage);
 	if (!line)
-	{
-		printf("2hatayi burada aldi\n");
-		return (free(buffer), NULL);
-	}
-	left_c = set_line(line);
-	if (!left_c)
-	{
-		printf("3hatayi burada aldi\n");
-	}
-	if (!line)
-		printf("4hatayi burada aldi\n");
-	return (free(buffer), line);
+		return (free(storage), storage = NULL, NULL);
+	storage = clean_storage(storage);
+	return (line);
 }
