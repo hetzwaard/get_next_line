@@ -6,7 +6,7 @@
 /*   By: mahkilic <mahkilic@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:48:58 by mahkilic      #+#    #+#                 */
-/*   Updated: 2024/11/18 15:48:58 by mahkilic      ########   odam.nl         */
+/*   Updated: 2024/11/25 16:13:40 by mahkilic      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static char	*read_buffer(int fd, char *storage)
 
 char	*get_next_line(int fd)
 {
-	static char	*storage = {0};
+	static char	*storage;
 	char		*line;
 
 	if (fd < 0)
