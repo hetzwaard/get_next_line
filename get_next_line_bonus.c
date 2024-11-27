@@ -77,7 +77,7 @@ char	*get_next_line(int fd)
 	char		*line;
 
 	if (fd < 0)
-		return (NULL);
+		return (free(storage[fd]), storage[fd] = NULL, NULL);
 	if ((storage[fd] && !ft_strchr(storage[fd], '\n')) || !storage[fd])
 		storage[fd] = read_buffer (fd, storage[fd]);
 	if (!storage[fd])
