@@ -6,13 +6,13 @@
 /*   By: flima <flima@student.42.fr>                  +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:48:58 by mahkilic      #+#    #+#                 */
-/*   Updated: 2024/11/27 17:57:37 by mahkilic      ########   odam.nl         */
+/*   Updated: 2024/11/27 20:02:57 by mahkilic      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-static char	*clean_storage(char *storage)
+static char	*left_over(char *storage)
 {
 	char	*new_storage;
 	char	*ptr;
@@ -85,6 +85,6 @@ char	*get_next_line(int fd)
 	line = new_line(storage[fd]);
 	if (!line)
 		return (free(storage[fd]), storage[fd] = NULL, NULL);
-	storage[fd] = clean_storage(storage[fd]);
+	storage[fd] = left_over(storage[fd]);
 	return (line);
 }

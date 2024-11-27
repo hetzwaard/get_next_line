@@ -6,13 +6,13 @@
 /*   By: mahkilic <mahkilic@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:48:58 by mahkilic      #+#    #+#                 */
-/*   Updated: 2024/11/27 19:54:36 by mahkilic      ########   odam.nl         */
+/*   Updated: 2024/11/27 20:02:37 by mahkilic      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static char	*clean_storage(char *storage)
+static char	*left_over(char *storage)
 {
 	char	*new_storage;
 	char	*ptr;
@@ -85,6 +85,6 @@ char	*get_next_line(int fd)
 	line = new_line(storage);
 	if (!line)
 		return (free(storage), storage = NULL, NULL);
-	storage = clean_storage(storage);
+	storage = left_over(storage);
 	return (line);
 }
