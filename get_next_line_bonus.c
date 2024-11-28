@@ -6,13 +6,13 @@
 /*   By: mahkilic <mahkilic@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/28 02:11:12 by mahkilic      #+#    #+#                 */
-/*   Updated: 2024/11/28 02:11:13 by mahkilic      ########   odam.nl         */
+/*   Updated: 2024/11/28 16:55:56 by mahkilic      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-static char	*left_over(char *storage)
+static char	*left_over(char *storage, int *ret)
 {
 	char	*new_storage;
 	char	*ptr;
@@ -20,15 +20,18 @@ static char	*left_over(char *storage)
 
 	ptr = ft_strchr(storage, '\n');
 	if (!ptr)
-		return (free(storage), storage = NULL, new_storage = NULL);
+		return (*ret = 1, free(storage), storage = NULL,
+			new_storage = NULL, NULL);
 	else
 		len = (ptr - storage) + 1;
 	if (!storage[len])
-		return (free(storage), storage = NULL);
+		return (*ret = 1, free(storage), storage = NULL, NULL);
 	new_storage = ft_substr(storage, len, ft_strlen(storage) - len);
 	(free(storage), storage = NULL);
 	if (!new_storage)
-		return (NULL);
+		*ret = 2;
+	else
+		*ret = 1;
 	return (new_storage);
 }
 
@@ -58,11 +61,13 @@ static char	*read_buffer(int fd, char *storage)
 	buffer[0] = '\0';
 	while (rid > 0 && !ft_strchr(buffer, '\n'))
 	{
-		rid = read (fd, buffer, BUFFER_SIZE);
+		rid = read(fd, buffer, BUFFER_SIZE);
 		if (rid > 0)
 		{
 			buffer[rid] = '\0';
 			storage = ft_strjoin(storage, buffer);
+			if (!storage)
+				return (free(buffer), buffer = NULL, NULL);
 		}
 	}
 	free(buffer);
@@ -75,16 +80,20 @@ char	*get_next_line(int fd)
 {
 	static char	*storage[1024];
 	char		*line;
+	int			ret;
 
-	if (fd < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (free(storage[fd]), storage[fd] = NULL, NULL);
-	if ((storage[fd] && !ft_strchr(storage[fd], '\n')) || !storage[fd])
-		storage[fd] = read_buffer (fd, storage[fd]);
+	if (!storage[fd] || !ft_strchr(storage[fd], '\n'))
+		storage[fd] = read_buffer(fd, storage[fd]);
 	if (!storage[fd])
 		return (NULL);
 	line = new_line(storage[fd]);
 	if (!line)
 		return (free(storage[fd]), storage[fd] = NULL, NULL);
-	storage[fd] = left_over(storage[fd]);
+	ret = 0;
+	storage[fd] = left_over(storage[fd], &ret);
+	if (ret == 2)
+		return (free(line), line = NULL, NULL);
 	return (line);
 }
