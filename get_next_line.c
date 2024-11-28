@@ -6,7 +6,7 @@
 /*   By: mahkilic <mahkilic@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:48:58 by mahkilic      #+#    #+#                 */
-/*   Updated: 2024/11/28 16:53:04 by mahkilic      ########   odam.nl         */
+/*   Updated: 2024/11/28 17:15:03 by mahkilic      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,27 +51,27 @@ static char	*new_line(char *storage)
 
 static char	*read_buffer(int fd, char *storage)
 {
-	int		rid;
+	int		bytes_read;
 	char	*buffer;
 
-	rid = 1;
+	bytes_read = 1;
 	buffer = malloc((BUFFER_SIZE + 1) * 1);
 	if (!buffer)
 		return (free(storage), storage = NULL, NULL);
 	buffer[0] = '\0';
-	while (rid > 0 && !ft_strchr(buffer, '\n'))
+	while (bytes_read > 0 && !ft_strchr(buffer, '\n'))
 	{
-		rid = read(fd, buffer, BUFFER_SIZE);
-		if (rid > 0)
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		if (bytes_read > 0)
 		{
-			buffer[rid] = '\0';
+			buffer[bytes_read] = '\0';
 			storage = ft_strjoin(storage, buffer);
 			if (!storage)
 				return (free(buffer), buffer = NULL, NULL);
 		}
 	}
 	free(buffer);
-	if (rid == -1)
+	if (bytes_read == -1)
 		return (free(storage), storage = NULL, NULL);
 	return (storage);
 }
