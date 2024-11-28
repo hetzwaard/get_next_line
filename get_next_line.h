@@ -6,14 +6,14 @@
 /*   By: mahkilic <mahkilic@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/18 15:43:59 by mahkilic      #+#    #+#                 */
-/*   Updated: 2024/11/27 20:21:27 by mahkilic      ########   odam.nl         */
+/*   Updated: 2024/11/29 00:31:31 by mahkilic      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+#  define BUFFER_SIZE 10000
 # endif
 
 # include <stdlib.h>
