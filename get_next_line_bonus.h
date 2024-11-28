@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   get_next_line_bonus.h                              :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: flima <flima@student.42.fr>                  +#+                     */
+/*   By: mahkilic <mahkilic@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/11/18 15:43:59 by mahkilic      #+#    #+#                 */
-/*   Updated: 2024/11/28 01:48:08 by mahkilic      ########   odam.nl         */
+/*   Created: 2024/11/28 02:11:24 by mahkilic      #+#    #+#                 */
+/*   Updated: 2024/11/28 02:11:26 by mahkilic      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
